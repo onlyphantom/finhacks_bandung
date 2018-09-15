@@ -1,0 +1,70 @@
+---
+title: "Submission Sample"
+author: "Samuel Chan"
+date: "9/15/2018"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+## R Markdown
+First, we'll read in some data to work with. The data are downloaded from the [Finhacks](http://finhacks.id) website, and are available to all participants.
+
+```{r}
+bca <- read.csv("data_input/bca_wikipedia.csv")
+str(bca)
+```
+
+```{r}
+# here I'm converting the date
+bca$date <- as.Date(bca$date)
+plot(x=bca$date, 
+     y=bca$views, 
+     type="l",
+     main="BCA Wikipedia views since 2015",
+     col="hotpink2"
+     )
+```
+
+# Exploratory Analysis
+This part of the report describes the action and strategy I'm taking. 
+- Clean the data  
+- Pre-processing  
+- Inspect the trend  
+- Feature Engineering
+
+Because Sam said feature engineering is paramount to building a good machine learning model.
+
+First step, let's clean the data up by converting `date` to a Date object:
+```{r}
+bca_n <- bca[,8:9]
+bca_n$date <- as.Date(bca_n$date)
+range(bca_n$date)
+```
+
+
+Between weekdays and weekend, which is better for business?
+```{r}
+bca_n$month <- as.factor(months(bca_n$date))
+bca_n$dayofweek <- as.factor(weekdays(bca_n$date))
+bca_n$isWeekend <- as.factor(ifelse(bca_n$dayofweek == "Saturday" | bca_n$dayofweek == "Sunday", "Weekend", "Weekday"))
+tail(bca_n)
+```
+
+Simple visualization to see if there's a difference in views across different days of the week:
+```{r}
+plot(x=bca_n$dayofweek, y=bca_n$views, main="ATM withdrawals across different days of month")
+```
+
+
+```{r}
+xtabs(views ~ dayofweek + month, bca_n)
+```
+
+## Machine Learning Model
+This section of the report describes my model construction, and the choice of algorithm.
+
+
+
+
+
